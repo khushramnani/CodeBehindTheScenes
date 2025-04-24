@@ -1,0 +1,25 @@
+{
+  "name": "getting_started",
+  "version": "1.0.0",
+  "description": "getting Started with Backend first code ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "CodeBehindTheScenes"
+  },
+  "keywords": [
+    "Backend",
+    "First",
+    "Code"
+  ],
+  "author": "Khush⚡",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  }
+}
