@@ -1,0 +1,14 @@
+{
+  "name": "data_modeling",
+  "version": "1.0.0",
+  "description": "Data Modeling Practice ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "khush",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^8.14.1"
+  }
+}
