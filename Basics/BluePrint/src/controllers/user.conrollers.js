@@ -14,7 +14,7 @@ const registerUser = asynHandler(async (req , res)=>{
 // check for user creation 
 // return res 
 
-const {fullname , email , username , password } = req.body
+const {fullname , email , username , password  } = req.body
 console.log("username" , username , "email" , email );
 
 // if(!fullname || !email || !username || !password){
@@ -27,7 +27,7 @@ if (
     throw new ApiError(400 , "All Fields are required")
 }
 
-const checkExistedUser = User.findOne({
+const checkExistedUser = await User.findOne({
     $or: [{username},{email}]
 })
 
@@ -39,8 +39,8 @@ if (checkExistedUser) {
 
 // check for image , avatar
 
-const avatarLocalPath = req.files?.avatar[0]?.Path;
-const coverImageLocalPath = req.files?.coverImage[0]?.Path;
+const avatarLocalPath = req.files?.avatar[0]?.path;
+const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
 if (!avatarLocalPath) {
     throw new ApiError(400 , "Avatar is required")
@@ -50,25 +50,30 @@ const avatar = await uploadFileOnCloudinary(avatarLocalPath)
 
 const coverImage = await uploadFileOnCloudinary(coverImageLocalPath)
 
-if (!avatar) {
+if (!avatar || !avatar.url) {
     throw new ApiError(400 , "Avatar is not uploaded")
 }
 
 
-const createUser = await User.create({
-    username: username.toLowerCase(),
-    fullname,
-    email,
-    password,
-    avatar: avatar.url,
-    coverimage: coverImage?.url || ""  // bcoz this is not mandatory
 
-})
+    const createUser = await User.create({
+        username: username.toLowerCase(),
+        fullname,
+        email,
+        password,
+        avatar: avatar.url,
+        coverimage: coverImage?.url || ""  
+    });
+    
+
 
 
 const checkUserCreated = await User.findById(createUser._id).select(
     "-password -refreshtoken"  // removed in res
 )
+
+console.log("new user id " , createUser._id);
+
 
 if (!checkUserCreated) {
     throw new ApiError(500 , "Something went wrong on user creation")
@@ -76,7 +81,7 @@ if (!checkUserCreated) {
 
 
 return res.status(201).json(
-    ApiResponse(200 , createUser , "User Created Successfully")
+   new ApiResponse(200 , createUser , "User Created Successfully")
 )
 
 })
