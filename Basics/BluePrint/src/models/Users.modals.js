@@ -43,11 +43,11 @@ const UserSchema = new Schema({
 },{timestamps:true})
 
 
-UserSchema.pre('save',function (next) {  // not use call back func becoz they dont provide ' this ' access 
+UserSchema.pre('save', async function (next) {  // not use call back func becoz they dont provide ' this ' access 
 
     if(!this.isModified("password")) return next()   //we write this condition to bypass the password when anything is modified  
 
-    this.password = bcrypt.hash(this.password , 10)  
+    this.password = await bcrypt.hash(this.password , 10)  
     next()     // if we only write this it can create problem which when anything when we modify like avatar it also encrypt pass again and we dont want it  
 })
 
@@ -57,7 +57,7 @@ UserSchema.methods.isPasswordCorrect = async function(password){
 
 
 UserSchema.methods.generateAccessToken = function () {
-    jwt.sign({
+   return jwt.sign({
         _id:this._id,
         username:this.username,
         fullname:this.fullname,
@@ -70,7 +70,7 @@ UserSchema.methods.generateAccessToken = function () {
 }
 
 UserSchema.methods.generateRefreshToken = function () {
-    jwt.sign({
+   return jwt.sign({
         _id:this._id,
         
     },
